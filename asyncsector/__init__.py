@@ -144,4 +144,3 @@ class AsyncSector(object):
     @asyncio.coroutine
     def alarm_arm_away(self, code=None):
         return (yield from self.alarm_toggle('Total', code=code))
-
