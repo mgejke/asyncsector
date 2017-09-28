@@ -12,6 +12,8 @@ def get_json(request):
     '''
     with aiohttp.Timeout(20):
         response = yield from request
+    
+    with aiohttp.Timeout(20):
         try:
             # other statements
 
@@ -28,7 +30,7 @@ def get_json(request):
             else:
                 result = yield from response.release()
 
-    return result
+        return result
 
 
 def get_time(time):

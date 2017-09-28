@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
-__version__ = '0.0.1'
+__version__ = '0.1.0'
 
 here = path.abspath(path.dirname(__file__))
 
@@ -23,18 +23,21 @@ setup(
     description='Asynchronous package for Sector Alarm',
     long_description=long_description,
     url='https://github.com/mgejke/asyncsector',
-    download_url='https://github.com/mgejke/asyncsector/tarball/' + __version__,
     license='BSD',
     classifiers=[
-      'Development Status :: 3 - Alpha',
       'Intended Audience :: Developers',
-      'Programming Language :: Python :: 3',
-    ],
-    keywords='',
+      'Programming Language :: Python :: 3'],
+    keywords=['sector', 'alarm'],
     packages=find_packages(exclude=['docs', 'tests*']),
     include_package_data=True,
     author='Martin Gejke',
     install_requires=install_requires,
     dependency_links=dependency_links,
-    author_email='martin@gejke.se'
+    author_email='martin@gejke.se',
+    python_requires='>=3.4',
+    entry_points={
+        'console_scripts': [
+            'asyncsector = asyncsector.__main__:main'
+        ]
+    }    
 )
