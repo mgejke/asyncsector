@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 here = path.abspath(path.dirname(__file__))
 
@@ -34,7 +34,7 @@ setup(
     install_requires=install_requires,
     dependency_links=dependency_links,
     author_email='martin@gejke.se',
-    python_requires='>=3.4',
+    python_requires='>=3.4.2',
     entry_points={
         'console_scripts': [
             'asyncsector = asyncsector.__main__:main'
