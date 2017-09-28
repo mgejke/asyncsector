@@ -24,4 +24,4 @@ Run the script:
 Disclaimer
 -------
 
-This packet is in no way affiliatetd with Sector Alarm, keep your password safe and use on your own risk.
+This packet is in no way affiliated with Sector Alarm, keep your password safe and use on your own risk.
