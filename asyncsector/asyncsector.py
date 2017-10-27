@@ -1,7 +1,9 @@
 '''  '''
 
-import aiohttp
+import async_timeout
+
 from .util import get_json
+
 
 class AsyncSector(object):
     ''' Class to interact with sector alarm webpage '''
@@ -28,7 +30,7 @@ class AsyncSector(object):
 
     async def login(self):
 
-        with aiohttp.Timeout(10):
+        with async_timeout.timeout(10):
             response = await self._session.post(
                 AsyncSector.Base + AsyncSector.Login, json=self._auth)
 

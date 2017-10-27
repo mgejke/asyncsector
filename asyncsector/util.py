@@ -33,4 +33,3 @@ def get_time(time):
     unix_timestamp = time.split('(')[1][:-2]
     date = datetime.datetime.fromtimestamp(int(unix_timestamp) / 1000)
     return date.isoformat()
-
