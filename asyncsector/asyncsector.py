@@ -1,4 +1,4 @@
-import asyncio
+'''  '''
 
 import aiohttp
 from .util import get_json
@@ -30,7 +30,7 @@ class AsyncSector(object):
 
         with aiohttp.Timeout(10):
             response = await self._session.post(
-                AsyncSector.Base + AsyncSector.Login, data=self._auth)
+                AsyncSector.Base + AsyncSector.Login, json=self._auth)
 
             if response.status == 200:
                 result = await response.text()
@@ -48,7 +48,7 @@ class AsyncSector(object):
             AsyncSector.Base + AsyncSector.Alarm,
             data={'PanelId': self._alarm_id})
 
-        return (await get_json(request))
+        return await get_json(request)
 
     async def get_temperatures(self):
         '''
@@ -57,7 +57,7 @@ class AsyncSector(object):
         request = self._session.get(
             AsyncSector.Base + AsyncSector.Temperatures.format(self._alarm_id))
 
-        return (await get_json(request))
+        return await get_json(request)
 
     async def get_history(self):
         '''
@@ -66,7 +66,7 @@ class AsyncSector(object):
         request = self._session.get(AsyncSector.Base +
                                     AsyncSector.History.format(self._alarm_id))
 
-        return (await get_json(request))
+        return await get_json(request)
 
     async def alarm_toggle(self, state, code=None):
         data = {
@@ -77,7 +77,7 @@ class AsyncSector(object):
         }
 
         request = self._session.post(
-            AsyncSector.Base + AsyncSector.Arm, data=data)
+            AsyncSector.Base + AsyncSector.Arm, json=data)
 
         result = await get_json(request)
         if 'status' in result and result['status'] == 'success':
@@ -86,10 +86,10 @@ class AsyncSector(object):
         return False
 
     async def alarm_disarm(self, code=None):
-        return (await self.alarm_toggle('Disarm', code=code))
+        return await self.alarm_toggle('Disarm', code=code)
 
     async def alarm_arm_home(self, code=None):
-        return (await self.alarm_toggle('Partial', code=code))
+        return await self.alarm_toggle('Partial', code=code)
 
     async def alarm_arm_away(self, code=None):
-        return (await self.alarm_toggle('Total', code=code))
+        return await self.alarm_toggle('Total', code=code)

@@ -44,19 +44,21 @@ async def async_main(loop):
 
             print()
 
-            log = history.get('LogDetails', None)
-            if log is not None:
-                for entry in log[:args.history]:
-                    print(
-                        '{:12}{:12}{}'.format(
-                            entry['EventType'],
-                            entry['User'],
-                            get_time(entry['Time'])))
-                print()
+            if history:
+                log = history.get('LogDetails', None)
+                if log is not None:
+                    for entry in log[:args.history]:
+                        print(
+                            '{:12}{:12}{}'.format(
+                                entry['EventType'],
+                                entry['User'],
+                                get_time(entry['Time'])))
+                    print()
 
-            for temperature in temperatures:
-                print('{:12}{}'.format(
-                    temperature['Label'], temperature['Temprature']))
+            if temperatures:
+                for temperature in temperatures:
+                    print('{:12}{}'.format(
+                        temperature['Label'], temperature['Temprature']))
 
 
 def main():

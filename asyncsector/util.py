@@ -1,36 +1,29 @@
+''' Helpers '''
+
 import datetime
 import asyncio
-import sys
 
-import aiohttp
-
+import async_timeout
 
 
 async def get_json(request):
     '''
     Takes a asyncio response and returns the resulting json
     '''
-    with aiohttp.Timeout(20):
-        response = await request
-    
-    with aiohttp.Timeout(20):
-        try:
-            # other statements
 
-            if 'json' in response.headers.get('content-type'):
-                return (await response.json())
-            else:
-                print((await response.text()))
+    try:
+        with async_timeout.timeout(20):
+            async with request as response:
 
-        finally:
-            if sys.exc_info()[0] is not None:
-                # on exceptions, close the connection altogether
-                response.close()
-                result = None
-            else:
-                result = await response.release()
+                if 'json' in response.headers.get('content-type'):
+                    return await response.json()
+                else:
+                    print(await response.text())
 
-        return result
+    except asyncio.TimeoutError:
+        pass
+
+    return None
 
 
 def get_time(time):
