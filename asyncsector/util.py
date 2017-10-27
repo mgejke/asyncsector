@@ -5,22 +5,22 @@ import sys
 import aiohttp
 
 
-@asyncio.coroutine
-def get_json(request):
+
+async def get_json(request):
     '''
     Takes a asyncio response and returns the resulting json
     '''
     with aiohttp.Timeout(20):
-        response = yield from request
+        response = await request
     
     with aiohttp.Timeout(20):
         try:
             # other statements
 
             if 'json' in response.headers.get('content-type'):
-                return (yield from response.json())
+                return (await response.json())
             else:
-                print((yield from response.text()))
+                print((await response.text()))
 
         finally:
             if sys.exc_info()[0] is not None:
@@ -28,7 +28,7 @@ def get_json(request):
                 response.close()
                 result = None
             else:
-                result = yield from response.release()
+                result = await response.release()
 
         return result
 

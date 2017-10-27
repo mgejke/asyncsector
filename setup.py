@@ -34,7 +34,7 @@ setup(
     install_requires=install_requires,
     dependency_links=dependency_links,
     author_email='martin@gejke.se',
-    python_requires='>=3.4.2',
+    python_requires='>=3.6.0',
     entry_points={
         'console_scripts': [
             'asyncsector = asyncsector.__main__:main'
