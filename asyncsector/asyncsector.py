@@ -1,4 +1,4 @@
-'''  '''
+""" Simple asynchronous package for interacting with Sector Alarms web panel """
 
 import async_timeout
 
@@ -6,7 +6,7 @@ from .util import get_json
 
 
 class AsyncSector(object):
-    ''' Class to interact with sector alarm webpage '''
+    """ Class to interact with sector alarm web panel """
 
     Base = 'https://mypagesapi.sectoralarm.net/'
     Login = 'User/Login'
@@ -15,20 +15,21 @@ class AsyncSector(object):
     History = 'Panel/GetPanelHistory/{}'
     Arm = 'Panel/ArmPanel'
 
-    @classmethod 
+    @classmethod
     async def create(cls, session, alarm_id, username, password):
-        ''' factory '''
+        """ factory """
         self = AsyncSector(session, alarm_id, username, password)
         logged_in = await self.login()
 
         return self if logged_in else None
 
     def __init__(self, session, alarm_id, username, password):
-        self._alarm_id = alarm_id
+        self.alarm_id = alarm_id
         self._session = session
         self._auth = {'userID': username, 'password': password}
 
     async def login(self):
+        """ Tries to Login to Sector Alarm """
 
         with async_timeout.timeout(10):
             response = await self._session.post(
@@ -43,39 +44,42 @@ class AsyncSector(object):
         return False
 
     async def get_status(self):
-        '''
+        """
         Fetches the status of the alarm
-        '''
+        """
         request = self._session.post(
             AsyncSector.Base + AsyncSector.Alarm,
-            data={'PanelId': self._alarm_id})
+            data={'PanelId': self.alarm_id})
 
         return await get_json(request)
 
     async def get_temperatures(self):
-        '''
+        """
         Fetches a list of all temperature sensors
-        '''
+        """
         request = self._session.get(
-            AsyncSector.Base + AsyncSector.Temperatures.format(self._alarm_id))
+            AsyncSector.Base + AsyncSector.Temperatures.format(self.alarm_id))
 
         return await get_json(request)
 
     async def get_history(self):
-        '''
+        """
         Fetches the alarm event log/history
-        '''
+        """
         request = self._session.get(AsyncSector.Base +
-                                    AsyncSector.History.format(self._alarm_id))
+                                    AsyncSector.History.format(self.alarm_id))
 
         return await get_json(request)
 
     async def alarm_toggle(self, state, code=None):
+        """
+        Tries to toggle the state of the alarm
+        """
         data = {
             'ArmCmd': state,
             'PanelCode': code,
             'HasLocks': False,
-            'id': self._alarm_id
+            'id': self.alarm_id
         }
 
         request = self._session.post(
@@ -87,11 +91,14 @@ class AsyncSector(object):
 
         return False
 
-    async def alarm_disarm(self, code=None):
+    async def disarm(self, code=None):
+        """ Send disarm command """
         return await self.alarm_toggle('Disarm', code=code)
 
-    async def alarm_arm_home(self, code=None):
+    async def arm_home(self, code=None):
+        """ Send arm home command """
         return await self.alarm_toggle('Partial', code=code)
 
-    async def alarm_arm_away(self, code=None):
+    async def arm_away(self, code=None):
+        """ Send arm away command """
         return await self.alarm_toggle('Total', code=code)
