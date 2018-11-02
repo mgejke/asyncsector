@@ -29,7 +29,7 @@ async def async_main(loop):
 
     args = parser.parse_args()
 
-    with aiohttp.ClientSession(loop=loop) as session:
+    async with aiohttp.ClientSession(loop=loop) as session:
 
         alarm = await AsyncSector.create(session,
                                          args.alarm_id, args.username, args.password)
@@ -71,4 +71,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-    
+
