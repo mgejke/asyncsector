@@ -15,6 +15,7 @@ class AsyncSector(object):
     History = 'Panel/GetPanelHistory/{}'
     Locks = "Locks/GetLocks/?WithStatus=true&id={}"
     Arm = 'Panel/ArmPanel'
+    Lock = 'Locks/Lock'
 
     @classmethod
     async def create(cls, session, alarm_id, username, password):
@@ -96,10 +97,19 @@ class AsyncSector(object):
             AsyncSector.Base + AsyncSector.Arm, json=data)
 
         result = await get_json(request)
-        if 'status' in result and result['status'] == 'success':
-            return True
+        return 'status' in result and result['status'] == 'success'
 
-        return False
+    async def lock_toggle(self, serial, code=None):
+        """
+        Tries to toggle the state of a lock
+        """
+        data = {"id": self.alarm_id, "LockSerial": serial, "DisarmCode": code}
+
+        request = self._session.post(
+            AsyncSector.Base + AsyncSector.Lock, json=data)
+
+        result = await get_json(request)
+        return 'Status' in result and result['Status'] == 'success'
 
     async def disarm(self, code=None):
         """ Send disarm command """
