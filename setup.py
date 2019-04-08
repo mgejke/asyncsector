@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 
 here = path.abspath(path.dirname(__file__))
 
@@ -15,7 +15,9 @@ with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
     all_reqs = f.read().split('\n')
 
 install_requires = [x.strip() for x in all_reqs if 'git+' not in x]
-dependency_links = [x.strip().replace('git+', '') for x in all_reqs if x.startswith('git+')]
+dependency_links = [
+    x.strip().replace('git+', '') for x in all_reqs if x.startswith('git+')
+]
 
 setup(
     name='asyncsector',
@@ -25,8 +27,9 @@ setup(
     url='https://github.com/mgejke/asyncsector',
     license='BSD',
     classifiers=[
-      'Intended Audience :: Developers',
-      'Programming Language :: Python :: 3'],
+        'Intended Audience :: Developers',
+        'Programming Language :: Python :: 3'
+    ],
     keywords=['sector', 'alarm'],
     packages=find_packages(exclude=['docs', 'tests*']),
     include_package_data=True,
@@ -36,8 +39,5 @@ setup(
     author_email='martin@gejke.se',
     python_requires='>=3.6.0',
     entry_points={
-        'console_scripts': [
-            'asyncsector = asyncsector.__main__:main'
-        ]
-    }    
-)
+        'console_scripts': ['asyncsector = asyncsector.__main__:main']
+    })
