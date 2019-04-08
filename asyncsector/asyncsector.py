@@ -1,5 +1,4 @@
 """ Simple asynchronous package for interacting with Sector Alarms web panel """
-
 import async_timeout
 
 from .util import get_json
@@ -11,9 +10,10 @@ class AsyncSector(object):
     Base = 'https://mypagesapi.sectoralarm.net/'
     Login = 'User/Login'
     Alarm = 'Panel/GetOverview'
-    Temperatures = 'Panel/GetTempratures/{}'
+    Temperatures = 'Panel/GetTempratures/'
     History = 'Panel/GetPanelHistory/{}'
     Arm = 'Panel/ArmPanel'
+    Version = 'v1_1_64'
 
     @classmethod
     async def create(cls, session, alarm_id, username, password):
@@ -49,7 +49,11 @@ class AsyncSector(object):
         """
         request = self._session.post(
             AsyncSector.Base + AsyncSector.Alarm,
-            data={'PanelId': self.alarm_id})
+            data={
+                'PanelId': self.alarm_id,
+                'Version': AsyncSector.Version
+            }
+        )
 
         return await get_json(request)
 
@@ -57,8 +61,14 @@ class AsyncSector(object):
         """
         Fetches a list of all temperature sensors
         """
-        request = self._session.get(
-            AsyncSector.Base + AsyncSector.Temperatures.format(self.alarm_id))
+        data = {
+            'id': self.alarm_id,
+            'Version': AsyncSector.Version
+        }
+        request = self._session.post(
+            AsyncSector.Base + AsyncSector.Temperatures,
+            json=data)
+        
 
         return await get_json(request)
 
