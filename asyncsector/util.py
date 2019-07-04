@@ -14,8 +14,10 @@ async def get_json(request):
     try:
         with async_timeout.timeout(20):
             async with request as response:
-
-                if 'json' in response.headers.get('content-type'):
+                if response.status == 426:
+                    result = await response.text()
+                    raise Exception("Error from api: %s" % result)
+                elif 'json' in response.headers.get('content-type'):
                     return await response.json()
                 else:
                     print(await response.text())

@@ -26,13 +26,14 @@ async def async_main(loop):
     parser.add_argument('--repeat', type=int, default=1)
     parser.add_argument('--delay', type=int, default=10)
     parser.add_argument('--history', type=int, default=1)
+    parser.add_argument('--version', type=str, default=None)
 
     args = parser.parse_args()
 
     async with aiohttp.ClientSession(loop=loop) as session:
 
         alarm = await AsyncSector.create(session,
-                                         args.alarm_id, args.username, args.password)
+                                         args.alarm_id, args.username, args.password, args.version)
 
         for i in range(0, args.repeat):
 
@@ -57,8 +58,7 @@ async def async_main(loop):
 
             if temperatures:
                 for temperature in temperatures:
-                    print('{:12}{}'.format(
-                        temperature['Label'], temperature['Temprature']))
+                    print('{:12}{}'.format(temperature['Label'], temperature['Temprature']))
 
 
 def main():
