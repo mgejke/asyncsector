@@ -13,20 +13,23 @@ class AsyncSector(object):
     Temperatures = 'Panel/GetTempratures/'
     History = 'Panel/GetPanelHistory/{}'
     Arm = 'Panel/ArmPanel'
-    Version = 'v1_1_67'
+    Version = 'v1_1_68'
 
     @classmethod
-    async def create(cls, session, alarm_id, username, password):
+    async def create(cls, session, alarm_id, username, password, version=None):
         """ factory """
-        self = AsyncSector(session, alarm_id, username, password)
+        self = AsyncSector(session, alarm_id, username, password, version)
         logged_in = await self.login()
 
         return self if logged_in else None
 
-    def __init__(self, session, alarm_id, username, password):
+    def __init__(self, session, alarm_id, username, password, version=None):
+        if version is None:
+            version = AsyncSector.Version
         self.alarm_id = alarm_id
         self._session = session
         self._auth = {'userID': username, 'password': password}
+        self._version = version
 
     async def login(self):
         """ Tries to Login to Sector Alarm """
@@ -51,7 +54,7 @@ class AsyncSector(object):
             AsyncSector.Base + AsyncSector.Alarm,
             data={
                 'PanelId': self.alarm_id,
-                'Version': AsyncSector.Version
+                'Version': self._version
             }
         )
 
@@ -63,7 +66,7 @@ class AsyncSector(object):
         """
         data = {
             'id': self.alarm_id,
-            'Version': AsyncSector.Version
+            'Version': self._version
         }
         request = self._session.post(
             AsyncSector.Base + AsyncSector.Temperatures,
