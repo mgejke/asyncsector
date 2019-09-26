@@ -5,6 +5,7 @@ import asyncio
 
 import async_timeout
 
+import re
 
 async def get_json(request):
     '''
@@ -35,3 +36,11 @@ def get_time(time):
     unix_timestamp = time.split('(')[1][:-2]
     date = datetime.datetime.fromtimestamp(int(unix_timestamp) / 1000)
     return date.isoformat()
+
+def find_version(string):
+    '''
+    Takes an html output and returns version string, if found
+    '''
+
+    r=re.search('v\d+_\d+_\d+',string)
+    return r.group(0) if r else None

@@ -26,11 +26,18 @@ async def async_main(loop):
     parser.add_argument('--repeat', type=int, default=1)
     parser.add_argument('--delay', type=int, default=10)
     parser.add_argument('--history', type=int, default=1)
-    parser.add_argument('--version', type=str, default=None)
+    parser.add_argument('--version', type=str, default=None, help='Version string or "auto"')
+    parser.add_argument('--getversion',dest='getversion',action='store_true')
+    parser.set_defaults(getversion=False)
 
     args = parser.parse_args()
 
     async with aiohttp.ClientSession(loop=loop) as session:
+
+        if args.getversion:
+            version = await AsyncSector.getapiversion(session)
+            print(version)
+            return
 
         alarm = await AsyncSector.create(session,
                                          args.alarm_id, args.username, args.password, args.version)
@@ -71,4 +78,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-    
+

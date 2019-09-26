@@ -2,6 +2,7 @@
 import async_timeout
 
 from .util import get_json
+from .util import find_version
 
 
 class AsyncSector(object):
@@ -15,9 +16,25 @@ class AsyncSector(object):
     Arm = 'Panel/ArmPanel'
     Version = 'v1_1_68'
 
+    @staticmethod
+    async def getapiversion(session):
+        """ Tries to retrieve current API version """
+
+        with async_timeout.timeout(10):
+            response = await session.get(
+                AsyncSector.Base, json=None)
+
+            if response.status == 200:
+                result = await response.text()
+                return find_version(result) if result else None
+
+        return None
+
     @classmethod
     async def create(cls, session, alarm_id, username, password, version=None):
         """ factory """
+        if version == 'auto':
+            version = await AsyncSector.getapiversion(session)
         self = AsyncSector(session, alarm_id, username, password, version)
         logged_in = await self.login()
 
